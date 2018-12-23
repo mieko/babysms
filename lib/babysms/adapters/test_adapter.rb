@@ -1,4 +1,3 @@
-require 'active_support'
 require 'rainbow/refinement'
 using Rainbow
 

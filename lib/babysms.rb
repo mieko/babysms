@@ -1,6 +1,8 @@
-require "babysms/version"
-require "babysms/adapters/test_adapter"
 require "active_support"
+
+require "babysms/version"
+require "babysms/message"
+require "babysms/adapters/test_adapter"
 
 module BabySMS
   mattr_accessor :adapter
