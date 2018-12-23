@@ -12,8 +12,10 @@ module BabySMS
                           phony_plausible: true
 
     attr_accessor :contents
+
+    # 1600 is the safe limit for most handsets to stitch together messages.
     validates :contents, presence: true,
-                         length: { maximum: 160 }
+                         length: { maximum: 1600 }
 
     def deliver_now
       raise_validation_error unless valid?
