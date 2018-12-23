@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activemodel", "~> 5.2.2"
+  spec.add_dependency "activemodel", "~> 5.2.1"
   spec.add_dependency "rainbow", "~> 3.0"
   spec.add_dependency "phony_rails", "~> 0.14"
 
