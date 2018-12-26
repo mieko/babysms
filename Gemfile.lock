@@ -2,9 +2,10 @@ PATH
   remote: .
   specs:
     babysms (0.1.0)
-      activemodel (~> 5.2.2)
+      activemodel (~> 5.2.1)
       phony_rails (~> 0.14)
       rainbow (~> 3.0)
+      twilio-ruby (~> 5.18.0)
 
 GEM
   remote: https://rubygems.org/
@@ -18,9 +19,16 @@ GEM
       tzinfo (~> 1.1)
     concurrent-ruby (1.1.4)
     diff-lcs (1.3)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
     i18n (1.3.0)
       concurrent-ruby (~> 1.0)
+    jwt (2.1.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
+    multipart-post (2.0.0)
+    nokogiri (1.9.1)
+      mini_portile2 (~> 2.4.0)
     phony (2.16.9)
     phony_rails (0.14.11)
       activesupport (>= 3.0)
@@ -41,6 +49,10 @@ GEM
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
     thread_safe (0.3.6)
+    twilio-ruby (5.18.0)
+      faraday (~> 0.9)
+      jwt (>= 1.5, <= 2.5)
+      nokogiri (>= 1.6, < 2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
 
