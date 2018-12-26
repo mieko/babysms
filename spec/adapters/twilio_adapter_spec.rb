@@ -10,10 +10,10 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter do
     BabySMS::Adapters::TwilioAdapter.new
   end
 
-  around(:each) do |block|
-    saved           = BabySMS.adapter
+  around(:each) do |example|
+    saved           = BabySMS
     BabySMS.adapter = subject
-    block.call
+    example.run
     BabySMS.adapter = saved
   end
 
