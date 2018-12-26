@@ -3,7 +3,7 @@ using Rainbow
 
 module BabySMS
   module Adapters
-    class Twilio
+    class TwilioAdapter
       attr_accessor :verbose
       attr_accessor :outbox
 
