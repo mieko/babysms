@@ -1,8 +1,8 @@
 require 'babysms/adapters/test_adapter'
 
-RSpec.describe BabySMS::Adapters::Test do
+RSpec.describe BabySMS::Adapters::TestAdapter do
   subject(:adapter) do
-    BabySMS::Adapters::Test.new
+    BabySMS::Adapters::TestAdapter.new
   end
 
   let(:message) do

@@ -28,7 +28,7 @@ module BabySMS
         super
 
         outbox.each do |m|
-          client.api.account.messages.create(to: m.recipient, body: m.contents)
+          client.messages.create(to: m.recipient, body: m.contents)
         end
 
         true
