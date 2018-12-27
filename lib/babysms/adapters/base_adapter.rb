@@ -20,7 +20,7 @@ module BabySMS
       def deliver_now(message)
         raise_validation_error unless valid?
 
-        return unless self.verbose.present?
+        return if verbose.blank?
 
         $stdout.puts "#{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}: \n" \
                      ">> #{message.contents.white}"

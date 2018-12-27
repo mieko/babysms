@@ -23,15 +23,12 @@ module BabySMS
       end
 
       def deliver_now(message)
-        self.outbox << message
+        outbox << message
 
         super
 
         outbox.each do |m|
-          client.api.account.messages.create(
-            to:   m.recipient,
-            body: m.contents
-          )
+          client.api.account.messages.create(to: m.recipient, body: m.contents)
         end
 
         true

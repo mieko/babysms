@@ -22,6 +22,5 @@ module BabySMS
 
       BabySMS.adapter.deliver_now(self)
     end
-
   end
 end
