@@ -4,7 +4,7 @@ RSpec.describe BabySMS do
   end
 
   it "uses a verbose test adapter by default" do
-    expect(BabySMS.adapter).to be_kind_of(BabySMS::Adapters::Test)
+    expect(BabySMS.adapter).to be_kind_of(BabySMS::Adapters::TestAdapter)
     expect(BabySMS.adapter.verbose).to be_truthy
   end
 end

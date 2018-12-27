@@ -4,7 +4,7 @@ require 'active_model/validations'
 module BabySMS
   module Adapters
     class BaseAdapter
-      using ActiveModel::Validations
+      # include ActiveModel::Validations
     end
   end
 end

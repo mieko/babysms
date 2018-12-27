@@ -1,4 +1,4 @@
-RSpec.shared_context 'message' do
+RSpec.shared_context BabySMS::Message do
 
   let(:message) do
     BabySMS::Message.new(
