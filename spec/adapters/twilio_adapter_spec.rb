@@ -1,3 +1,4 @@
+require 'rainbow'
 require 'babysms/adapters/twilio_adapter'
 require 'babysms/message'
 require 'twilio-ruby'
@@ -9,7 +10,7 @@ require 'active_model/validations'
 
 RSpec.describe BabySMS::Adapters::TwilioAdapter, type: :model do
 
-  subject do
+  subject(:adapter) do
     BabySMS::Adapters::TwilioAdapter
       .new(
         account_sid: '1234',
@@ -17,7 +18,17 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter, type: :model do
       )
   end
 
-  before(:each) { WebMock.stub_request(:any, "twilio.com") }
+  before(:each) do
+    WebMock.stub_request(:any, "twilio.com")
+
+    stub_request(:post, "https://api.twilio.com/2010-04-01/Accounts/1234/Messages.json")
+      .with(body: { "Body" => "Hey whats up",
+                    "To"   => "+1 555-555-5555" })
+      .to_return(status:  200,
+                 body:    "",
+                 headers: {})
+
+  end
 
   it_behaves_like BabySMS::Adapters
   include_context BabySMS::Message
@@ -31,9 +42,14 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter, type: :model do
   end
 
   context 'when .verbose is true' do
-    subject(:verbose_subject) { subject.then { |s| s.adapter = true } }
+    subject do
+      adapter.then do |s|
+        s.verbose = true
+        s
+      end
+    end
     it "prints outgoing SMS messages to the terminal" do
-      expect { verbose_subject.deliver_now(message) }.to output.to_stdout
+      expect { subject.deliver_now(message) }.to output.to_stdout
     end
   end
 

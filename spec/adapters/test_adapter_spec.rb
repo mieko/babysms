@@ -3,7 +3,10 @@ require 'babysms/message'
 
 RSpec.describe BabySMS::Adapters::Test do
   let(:message) do
-    BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, World.')
+    BabySMS::Message.new(
+      recipient: '+1 555-555-5555',
+      contents:  'Hello, World.'
+    )
   end
 
   subject(:adapter) do
@@ -11,7 +14,7 @@ RSpec.describe BabySMS::Adapters::Test do
   end
 
   around(:each) do |block|
-    saved = BabySMS.adapter
+    saved           = BabySMS.adapter
     BabySMS.adapter = subject
     block.call
     BabySMS.adapter = saved
