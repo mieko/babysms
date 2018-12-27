@@ -9,13 +9,21 @@ require 'active_model/validations'
 
 RSpec.describe BabySMS::Adapters::TwilioAdapter, type: :model do
 
+  subject do
+    BabySMS::Adapters::TwilioAdapter
+      .new(
+        account_sid: '1234',
+        auth_token:  '1234'
+      )
+  end
+
   before(:each) { WebMock.stub_request(:any, "twilio.com") }
 
   it_behaves_like BabySMS::Adapters
+  include_context BabySMS::Message
+
   it { is_expected.to have_attributes(verbose: false) }
-  it {
-    is_expected.to validate_presence_of(:account_sid)
-  }
+  it { is_expected.to validate_presence_of(:account_sid) }
   it { is_expected.to validate_presence_of(:auth_token) }
 
   it "does not print outgoing SMS messages to the terminal by default" do
@@ -23,7 +31,7 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter, type: :model do
   end
 
   context 'when .verbose is true' do
-    subject(:verbose_subject) { subject.then { |s| s.subject = true } }
+    subject(:verbose_subject) { subject.then { |s| s.adapter = true } }
     it "prints outgoing SMS messages to the terminal" do
       expect { verbose_subject.deliver_now(message) }.to output.to_stdout
     end

@@ -1,4 +1,5 @@
 RSpec.shared_examples BabySMS::Adapters do
+
   include_context BabySMS::Message
 
   around(:each) do |example|
