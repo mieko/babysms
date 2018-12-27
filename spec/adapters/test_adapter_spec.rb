@@ -1,5 +1,4 @@
 require 'babysms/adapters/test_adapter'
-require 'babysms/message'
 
 RSpec.describe BabySMS::Adapters::Test do
   subject(:adapter) do
