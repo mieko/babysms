@@ -1,13 +1,13 @@
 require 'babysms/adapters/test_adapter'
 require 'babysms/message'
 
-RSpec.describe BabySMS::Adapters::TestAdapter do
+RSpec.describe BabySMS::Adapters::Test do
   let(:message) do
     BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, World.')
   end
 
   subject(:adapter) do
-    BabySMS::Adapters::TestAdapter.new
+    BabySMS::Adapters::Test.new
   end
 
   around(:each) do |block|

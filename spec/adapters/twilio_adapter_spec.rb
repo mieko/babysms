@@ -1,14 +1,21 @@
 require 'babysms/adapters/twilio_adapter'
 require 'babysms/message'
+require 'twilio-ruby'
+require 'webmock/rspec'
+require 'shoulda-matchers'
 
 RSpec.describe BabySMS::Adapters::TwilioAdapter do
-  let(:message) do
-    BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, World.')
+
+  include Shoulda::Matchers
+
+  # Stub out requests for twilio API
+  before(:each) do
+    WebMock.stub_request(:any, "twilio.com")
+    WebMock.stub_request(:any, "api.twilio.com")
   end
 
-  subject(:adapter) do
-    BabySMS::Adapters::TwilioAdapter.new
-  end
+  include_context 'message'
+  it_behaves_like BabySMS::Message
 
   around(:each) do |example|
     saved           = BabySMS
@@ -18,6 +25,15 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter do
   end
 
   it { is_expected.to have_attributes(verbose: false) }
+  it { is_expected.to validate_presence_of(:account_sid) }
+  it { is_expected.to validate_presence_of(:auth_token) }
+
+  #   end
+  #
+  #   # set up a client to talk to the Twilio REST API
+  #   @client = Twilio::REST::Client.new (account_sid, auth_token)
+  #
+  #   outbox.push(message)
 
   it "prints outgoing SMS messages to the terminal if verbose is true" do
     subject.verbose = true
@@ -35,7 +51,7 @@ RSpec.describe BabySMS::Adapters::TwilioAdapter do
 
   it "saves outgoing messages in the outbox" do
     expect(subject.outbox).to be_empty
-    subject.deliver_now(message)
+    expect(subject.deliver_now(message)).to eq true
     expect(subject.outbox.size).to eq(1)
     expect(subject.outbox.first).to eq(message)
   end

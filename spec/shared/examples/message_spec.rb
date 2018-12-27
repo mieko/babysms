@@ -1,11 +1,7 @@
-require 'babysms/message'
+RSpec.shared_examples BabySMS::Message do
+  include_context 'message'
 
-RSpec.describe BabySMS::Message do
-  subject(:message) do
-    BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, world')
-  end
-
-  it "calls deliver_now on the configured adapter" do
+  it "calls #deliver_now on the currently active adapter" do
     expect(BabySMS.adapter).to receive(:deliver_now)
     message.deliver_now
   end
