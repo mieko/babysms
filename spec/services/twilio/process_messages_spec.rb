@@ -3,6 +3,9 @@ require 'babysms/adapters/twilio_adapter'
 
 RSpec.describe BabySMS::Services::Twilio::ProcessMessages, type: :service do
 
+  include_context 'when Twilio is the active adapter'
+  subject { BabySMS::Services::Twilio::ProcessMessages }
+
   before(:each) do
     WebMock.
       stub_request(:any, 'twilio.com').
@@ -18,14 +21,14 @@ RSpec.describe BabySMS::Services::Twilio::ProcessMessages, type: :service do
                 headers: {})
   end
 
+  ### ASSIGNMENTS #############################################################
   # Magic numbers provided by Twilio for test API
   # https://www.twilio.com/docs/iam/test-credentials#test-incoming-phone-numbers-parameters-PhoneNumber
   let(:invalid_number) { "+15005550001" }
   let(:non_mobile_number) { "+15005550009" }
   let(:valid_number) { "+15005550006" }
 
-  include_context 'when Twilio is the active adapter'
-
+  #############################################################################
   it 'can create and send an SMS' do
     subject.call(messages: [message])
   end

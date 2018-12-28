@@ -1,10 +1,12 @@
+require 'active_support/concern'
+require 'babysms/concerns/process_messages_concern'
 require 'twilio-ruby'
-require 'babysms/services/base_service'
 
 module BabySMS
   module Services
     module Twilio
-      class ProcessMessages < BaseService
+      class ProcessMessages
+        using Concerns::ServiceObject
 
         def initialize(**args)
           super
@@ -14,7 +16,7 @@ module BabySMS
 
         def call
           @messages.each do |m|
-            BabySMS::Adapters::Twilio::DeliverSMS.call(
+            BabySMS::DeliverMessage.call(
               to:   m.recipient,
               from: m.sender,
               body: m.contents
@@ -23,6 +25,3 @@ module BabySMS
         end
 
       end
-    end
-  end
-end

@@ -2,8 +2,9 @@ require 'twilio-ruby'
 require_relative 'base_adapter'
 
 module BabySMS
-  module Strings
+  module Strategy
     module Twilio
+
       module ResponseCodes
         SUCCESS       = ''
         INVALID       = '21212'
@@ -16,6 +17,7 @@ module BabySMS
           NON_MOBILE = "This phone number is not owned by your account or is not SMS-capable.",
           MESSAGES_FULL = "This number has an SMS message queue that is full."
       end
+
     end
   end
 end

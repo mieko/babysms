@@ -5,6 +5,7 @@ PATH
       activemodel (~> 5.2.1)
       phony_rails (~> 0.14)
       rainbow (~> 3.0)
+      shoulda-matchers (~> 3.1.2)
       twilio-ruby (~> 5.18.0)
       webmock (~> 3.5.1)
 
@@ -56,6 +57,8 @@ GEM
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
     safe_yaml (1.0.4)
+    shoulda-matchers (3.1.2)
+      activesupport (>= 4.0.0)
     thread_safe (0.3.6)
     twilio-ruby (5.18.0)
       faraday (~> 0.9)
