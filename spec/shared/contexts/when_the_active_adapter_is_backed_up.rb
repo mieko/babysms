@@ -1,9 +1,9 @@
-RSpec.shared_context 'setup data for adapter' do
+RSpec.shared_context 'when the active adapter is backed up' do
 
   # Backup the current before and after the example
   around(:each) do |example|
     saved           = BabySMS
-    BabySMS.adapter = subject
+    BabySMS.adapter = adapter
     example.run
     BabySMS.adapter = saved
   end
@@ -25,6 +25,3 @@ RSpec.shared_context 'setup data for adapter' do
 
 end
 
-RSpec.shared_examples BabySMS::Adapters do
-
-end

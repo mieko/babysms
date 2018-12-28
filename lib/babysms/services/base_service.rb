@@ -5,7 +5,7 @@ module BabySMS
     class BaseService
 
       def initialize(verbose: true)
-        @verbose = args[:verbose]
+        @verbose = verbose
       end
 
       def self.call(**args)

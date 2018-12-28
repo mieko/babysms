@@ -1,4 +1,5 @@
 require 'twilio-ruby'
+require 'babysms/services/base_service'
 
 module BabySMS
   module Services

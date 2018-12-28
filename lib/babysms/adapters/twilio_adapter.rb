@@ -2,22 +2,29 @@ require 'twilio-ruby'
 require_relative 'base_adapter'
 
 module BabySMS
+  module Strings
+    module Twilio
+      module ResponseCodes
+        SUCCESS       = ''
+        INVALID       = '21212'
+        NON_MOBILE    = '21606'
+        MESSAGES_FULL = '21611'
+      end
+
+      module ResponseMessages
+        INVALID = "This phone number is invalid.",
+          NON_MOBILE = "This phone number is not owned by your account or is not SMS-capable.",
+          MESSAGES_FULL = "This number has an SMS message queue that is full."
+      end
+    end
+  end
+end
+
+module BabySMS
   module Adapters
 
+    using BabySMS::Strings::Twilio
     class TwilioAdapter < BaseAdapter
-
-      RESPONSE_CODES = [
-        success:       '',
-        invalid:       21212,
-        non_mobile:    21606,
-        messages_full: 21611
-      ].freeze
-
-      MESSAGES = {
-        '21212': "This phone number is invalid.",
-        '21606': "This phone number is not owned by your account or is not SMS-capable.",
-        '21611': "This number has an SMS message queue that is full."
-      }.freeze
 
       def initialize(**args)
         super
@@ -36,7 +43,7 @@ module BabySMS
             body: message.contents
           )
 
-        response_code == RESPONSE_CODES[:success]
+        response_code == ResponseCodes::SUCCESS
       end
     end
   end
