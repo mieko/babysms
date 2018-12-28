@@ -1,5 +1,4 @@
-require 'active_support/callbacks'
-require 'rainbow/refinement'
+require 'babysms/concerns/service_object'
 
 =begin
 
@@ -21,11 +20,9 @@ module BabySMS
 
   ###########################################################################
   class Client
-    include ActiveModel::Model
-    include ActiveSupport::Concern
+    using Concerns::ServiceObject
 
     ###########################################################################
-
     protected
 
     attr_accessor :verbose

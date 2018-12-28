@@ -3,7 +3,7 @@ require 'active_support/concern'
 
 module BabySMS
   module Concerns
-    class ServiceObject
+    module ServiceObject
 
       using ActiveModel::Model
       using ActiveSupport::Concern
