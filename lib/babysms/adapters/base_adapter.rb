@@ -1,30 +1,16 @@
-require 'active_model'
-require 'active_model/validations'
-require 'rainbow/refinement'
-
-using Rainbow
 module BabySMS
   module Adapters
+
+    # TODO: What is the INTERFACE of an "Adapter"?
+
     class BaseAdapter
-      include ActiveModel
-      include ActiveModel::Validations
-
-      attr_accessor :verbose
-      attr_accessor :outbox
-
       def initialize(**args)
-        self.verbose = args[:verbose] || false
-        self.outbox  = []
+        @verbose = args[:verbose] || false
+        @outbox  = args[:outbox] || []
+        @purge   = args[:purge] || true
       end
 
-      def deliver_now(message)
-        raise_validation_error unless valid?
-
-        return if verbose.blank?
-
-        $stdout.puts "#{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}: \n" \
-                     ">> #{message.contents.white}"
-      end
     end
+
   end
 end

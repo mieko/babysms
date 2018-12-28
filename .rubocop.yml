@@ -9,7 +9,7 @@ Layout/EmptyLines:
 
 # Restore Rubocop default
 Layout/DotPosition:
-  EnforcedStyle: leading
+  EnforcedStyle: trailing
 
 # The inbuilt style does not accommodate for:
 #

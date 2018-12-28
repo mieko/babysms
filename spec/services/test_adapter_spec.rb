@@ -1,9 +1,6 @@
 require 'babysms/adapters/test_adapter'
 
-RSpec.describe BabySMS::Adapters::TestAdapter do
-  subject(:adapter) do
-    BabySMS::Adapters::TestAdapter.new
-  end
+RSpec.shared_examples BabySMS::Adapters do
 
   let(:message) do
     BabySMS::Message.new(
@@ -12,6 +9,7 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
     )
   end
 
+  it { should respond_to(:call) }
 
   around(:each) do |block|
     saved           = BabySMS.adapter

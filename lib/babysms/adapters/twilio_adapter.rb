@@ -1,43 +1,42 @@
-require 'rainbow/refinement'
 require 'twilio-ruby'
-
 require_relative 'base_adapter'
 
-require 'rainbow/refinement'
-
-using Rainbow
 module BabySMS
   module Adapters
-    class TwilioAdapter < BaseAdapter
-      attr_accessor :account_sid
-      attr_accessor :auth_token
 
-      validates :account_sid, presence: true
-      validates :auth_token, presence: true
+    class TwilioAdapter < BaseAdapter
+
+      RESPONSE_CODES = [
+        success:       '',
+        invalid:       21212,
+        non_mobile:    21606,
+        messages_full: 21611
+      ].freeze
+
+      MESSAGES = {
+        '21212': "This phone number is invalid.",
+        '21606': "This phone number is not owned by your account or is not SMS-capable.",
+        '21611': "This number has an SMS message queue that is full."
+      }.freeze
 
       def initialize(**args)
         super
 
         @account_sid = args[:account_sid]
         @auth_token  = args[:auth_token]
+        @client      = Twilio::REST::Client.new(@account_sid,
+                                                @auth_token)
       end
 
-      def deliver_now(message)
-        outbox << message
+      def deliver(message)
+        response_code =
+          @client.api.account.messages.create(
+            to:   message.recipient,
+            from: message.sender,
+            body: message.contents
+          )
 
-        super
-
-        outbox.each do |m|
-          client.messages.create(to: m.recipient, body: m.contents)
-        end
-
-        true
-      end
-
-      private
-
-      def client
-        @client ||= Twilio::REST::Client.new(@account_sid, @auth_token)
+        response_code == RESPONSE_CODES[:success]
       end
     end
   end

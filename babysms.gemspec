@@ -38,7 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "phony_rails", "~> 0.14"
   spec.add_dependency "twilio-ruby", "~> 5.18.0"
   spec.add_dependency "webmock", "~> 3.5.1"
-  spec.add_dependency "shoulda-matchers", "~> 4.0.0.rc1"
 
   spec.add_development_dependency "bundler", ">= 1.17"
   spec.add_development_dependency "rake", ">= 10.0"
