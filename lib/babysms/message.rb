@@ -3,6 +3,9 @@ require "phony_rails"
 
 module BabySMS
   class Message
+    class FailedDelivery < StandardError
+    end
+
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
 
@@ -20,8 +23,13 @@ module BabySMS
     def deliver_now
       raise_validation_error unless valid?
 
-      BabySMS.adapter.deliver_now(self)
+      BabySMS.adapters.each do |adapter|
+        adapter.deliver_now(self)
+        break
+      rescue FailedDelivery => e
+        warn "Failed SMS delivery: #{e}"
+        next
+      end
     end
-
   end
 end
