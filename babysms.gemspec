@@ -41,4 +41,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", ">= 1.17"
   spec.add_development_dependency "rake", ">= 10.0"
   spec.add_development_dependency "rspec", ">= 3.0"
+
+  spec.add_development_dependency "twilio-ruby", "~> 5.18.0"
+  spec.add_development_dependency "nexmo", "~> 5.5.0"
+  spec.add_development_dependency "ruby-bandwidth", "~> 1.0.20"
+  spec.add_development_dependency "plivo", ">= 4.1.6"
 end
