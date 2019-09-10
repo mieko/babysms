@@ -4,19 +4,17 @@ end
 
 module BabySMS
   module Adapters
-    class PlivoAdapter
-      attr_reader :client
-      attr_reader :from
-
+    class PlivoAdapter < BabySMS::Adapter
       def initialize(auth_id:, auth_token:, from:)
-        @from = from
-        @client = Plivo::RestClient.new(auth_id, auth_token)
+        super(from: from)
+
+        self.client = Plivo::RestClient.new(auth_id, auth_token)
       end
 
-      def deliver_now(message)
+      def deliver(message)
         client.messages.create(from, [message.recipient], message.contents)
       rescue PlivoRESTError => e
-        raise ::BabySMS::Message::FailedDelivery, e.message
+        raise BabySMS::FailedDelivery.new(e.message, adapter: self)
       end
     end
   end

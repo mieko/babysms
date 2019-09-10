@@ -4,23 +4,22 @@ end
 
 module BabySMS
   module Adapters
-    class NexmoAdapter
-      attr_reader :client
-      attr_reader :from
-
+    class NexmoAdapter < BabySMS::Adapter
       def initialize(api_key:, api_secret:, from:)
-        # Thanks for being weird.
-        @from = from.sub(/\A\+/, '')
+        super(from: from)
 
-        @client = Nexmo::Client.new(api_key: api_key, api_secret: api_secret)
+        self.client = Nexmo::Client.new(api_key: api_key, api_secret: api_secret)
       end
 
-      def deliver_now(message)
-        response = client.sms.send(from: from,
+      def deliver(message)
+        # Thanks for being weird, Nexmo.  Rejects numbers starting with "+"
+        response = client.sms.send(from: from.gsub(/\A\+/, ''),
                                    to: message.recipient,
                                    text: message.contents)
+
         if response.messages.first.status != '0'
-          raise ::BabySMS::Message::FailedDelivery, response.messages.first.error_text
+          raise BabySMS::FailedDelivery.new(response.messages.first.error_text,
+                                            adapter: self)
         end
       end
     end

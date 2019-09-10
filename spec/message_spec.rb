@@ -13,38 +13,51 @@ RSpec.describe BabySMS::Message do
     BabySMS::Adapters::TestAdapter.new(fails: true)
   end
 
-  it "calls deliver_now on the configured adapter" do
-    expect(BabySMS.adapter).to receive(:deliver_now)
-    message.deliver_now
+  it 'calls deliver on the configured adapter' do
+    expect(BabySMS.adapter).to receive(:deliver)
+    message.deliver
   end
 
-  it "does not attempt to deliver to invalid recipients" do
+  it 'does not attempt to deliver to invalid recipients' do
     message.recipient = '5'
     expect do
-      message.deliver_now
-    end.to raise_error(ActiveModel::ValidationError)
+      message.deliver
+    end.to raise_error(BabySMS::InvalidMessage)
   end
 
-  it "attempts all adapters until success" do
-    expect(good_adapter).to receive(:deliver_now)
+  it 'attempts all adapters until success' do
+    expect(good_adapter).to receive(:deliver)
 
-    message.deliver_now(adapters: [bad_adapter, good_adapter])
+    message.deliver(adapters: [bad_adapter, good_adapter])
   end
 
-  it "raises an error if all adapters fail" do
+  it 'raises an error if all adapters fail' do
     expect do
-      message.deliver_now(adapters: [bad_adapter])
-    end.to raise_error(BabySMS::Message::FailedDelivery)
+      message.deliver(adapters: [bad_adapter])
+    end.to raise_error(BabySMS::FailedDelivery)
   end
 
-  it "doesn't raise an error if one adapter succeeds" do
+  it 'doesnt raise an error if any adapter succeeds' do
     expect do
-      message.deliver_now(adapters: [bad_adapter, good_adapter])
+      message.deliver(adapters: [bad_adapter, good_adapter])
     end.not_to raise_error
   end
 
-  it "collects earlier adapter errors on successful delivery" do
-    result = message.deliver_now(adapters: [bad_adapter, good_adapter])
-    expect(result.size).to equal(1)
+  it 'collects earlier adapter errors on successful delivery' do
+    result = message.deliver(adapters: [bad_adapter, good_adapter])
+    expect(result).to be_instance_of(BabySMS::SuccessfulDelivery)
+
+    # We should have one exception logged, and it should be bad_adapter
+    expect(result.exceptions.size).to eq(1)
+    expect(result.exceptions.first.adapter).to be(bad_adapter)
+    expect(result.adapter).to be(good_adapter)
+  end
+
+  it 'records the successful adapter on success' do
+    result = message.deliver(adapters: [good_adapter])
+    expect(result).to be_instance_of(BabySMS::SuccessfulDelivery)
+
+    expect(result.exceptions).to be_empty
+    expect(result.adapter).to be(good_adapter)
   end
 end

@@ -3,26 +3,31 @@ using Rainbow
 
 module BabySMS
   module Adapters
-    class TestAdapter
+    class TestAdapter < BabySMS::Adapter
       attr_accessor :verbose
       attr_accessor :fails
       attr_accessor :outbox
 
-      def initialize(verbose: false, fails: false)
+      def initialize(verbose: false, fails: false, from: '+15558675309')
+        super(from: from)
         self.verbose = verbose
         self.fails = fails
         self.outbox = []
       end
 
-      def deliver_now(message)
+      def deliver(message)
         if fails
-          fail BabySMS::Message::FailedDelivery, "intentional failure"
+          raise BabySMS::FailedDelivery.new('intentional failure', adapter: self)
         end
 
         outbox.push(message)
         if verbose
-          $stdout.puts "#{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}: \n" \
-                       ">> #{message.contents.white}"
+          display_message = <<~"MSG"
+            #{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}:
+              >> #{message.contents.white}
+          MSG
+
+          $stderr.puts display_message
         end
       end
     end

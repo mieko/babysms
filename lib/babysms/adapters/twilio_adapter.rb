@@ -4,21 +4,19 @@ end
 
 module BabySMS
   module Adapters
-    class TwilioAdapter
-      attr_reader :client
-      attr_reader :from
-
+    class TwilioAdapter < BabySMS::Adapter
       def initialize(account_sid:, auth_token:, from:)
-        @from = from
-        @client = Twilio::REST::Client.new(account_sid, auth_token)
+        super(from: from)
+
+        self.client = Twilio::REST::Client.new(account_sid, auth_token)
       end
 
-      def deliver_now(message)
+      def deliver(message)
         client.api.account.messages.create(from: from,
                                            to: message.recipient,
                                            body: message.contents)
       rescue Twilio::REST::TwilioError => e
-        raise ::BabySMS::Message::FailedDelivery, e.message
+        raise BabySMS::FailedDelivery.new(e.message, adapter: self)
       end
     end
   end
