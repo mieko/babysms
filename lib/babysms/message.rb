@@ -20,16 +20,31 @@ module BabySMS
     validates :contents, presence: true,
                          length: { maximum: 1600 }
 
-    def deliver_now
+    # adapter can be set to an Adapter or an array of Adapters.
+    # omitting it uses the default-configured BabySMS.adapters
+    def deliver_now(adapters: BabySMS.adapters)
       raise_validation_error unless valid?
 
-      BabySMS.adapters.each do |adapter|
+      raise FailedDelivery, "No adapter configured" if adapters.empty?
+
+      # try all adapters in order, returning when one succeeds.  Collect
+      # errors until then.
+      errors = []
+
+      adapters.each do |adapter|
         adapter.deliver_now(self)
         break
       rescue FailedDelivery => e
-        warn "Failed SMS delivery: #{e}"
-        next
+        errors.push(e)
       end
+
+      # never got delivered: error
+      if errors.size == adapters.size
+        raise FailedDelivery.new(errors)
+      end
+
+      # got delivered, report any errors
+      return errors
     end
   end
 end
