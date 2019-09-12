@@ -22,12 +22,12 @@ module BabySMS
 
         outbox.push(message)
         if verbose
-          display_message = <<~"MSG"
+          terminal_output = <<~"MSG"
             #{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}:
               >> #{message.contents.white}
           MSG
 
-          $stderr.puts display_message
+          $stderr.puts terminal_output
         end
       end
     end

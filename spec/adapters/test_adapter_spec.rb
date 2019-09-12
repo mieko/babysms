@@ -32,7 +32,7 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
     subject.verbose = false
     expect do
       subject.deliver(message)
-    end.not_to output.to_stdout
+    end.not_to output.to_stderr
   end
 
   it 'saves outgoing messages in the outbox' do
