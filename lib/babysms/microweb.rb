@@ -4,10 +4,6 @@ require 'active_support/core_ext/module/attribute_accessors'
 
 module BabySMS
   module Microweb
-    Request = Struct.new(:http_method, :path, :post_data, keyword_init: true)
-    Response = Struct.new(:status, :content_type, keyword_init: true)
-
-
     module ClassMethods
       def h(text)
         ::Rack::Utils.escape_html(text)
@@ -15,9 +11,9 @@ module BabySMS
 
       cattr_accessor :handlers, default: {}
 
-      [:get, :post, :put, :delete].each do |http_method|
-        define_method(http_method) do |path, &block|
-          self.handlers["#{http_method} #{path}"] = lambda(&block)
+      [:get, :post, :put, :delete].each do |request_method|
+        define_method(request_method) do |path, &block|
+          handlers["#{request_method} #{path}"] = lambda(&block)
         end
       end
     end
@@ -27,24 +23,20 @@ module BabySMS
     end
 
     def call(env)
-      request = Request.new(http_method: env['REQUEST_METHOD'].downcase.to_sym,
-                            path: env['REQUEST_URI'])
-      response = Response.new(status: 200,
-                              content_type: "application/json")
+      request = Rack::Request.new(env)
+      response = Rack::Response.new([], 500, { "Content-Type" => "application/json" })
 
-      key = "#{request.http_method} #{request.path}"
+      key = "#{request.request_method.downcase} #{request.path}"
 
-      body = if (handler = self.class.handlers[key])
-        handler.call(request, response)
+      if (handler = self.class.handlers[key])
+        result = handler.call(request, response, env)
+        response.body = result unless result.nil?
       else
         response.status = 404
-        "not found"
+        response.body = "not found"
       end
 
-      [ response.status,
-        { "Content-Type" => response.content_type },
-        StringIO.new(body)
-      ]
+      [response.status, response.headers, StringIO.new(response.body)]
     end
   end
 end

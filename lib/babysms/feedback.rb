@@ -6,8 +6,7 @@ module BabySMS
   class Feedback
     include Microweb
 
-
-    INDEX_HTML = <<~"EOD"
+    INDEX_HTML = <<~"EOD".freeze
       <!DOCTYPE html>
         <head>
           <title>BabySMS #{h BabySMS::VERSION} Feedback Endpoint</title>
@@ -30,11 +29,22 @@ module BabySMS
     EOD
 
     get '/' do |request, response|
-      response.content_type = "text/html;charset=utf-8"
-      adapters_li = BabySMS.adapters.map do |a|
-        "<li>/#{h a.adapter_id} <b>(#{h a.class.name})</b></li>"
+      response.headers['Content-Type'] = "text/html;charset=utf-8"
+      adapters = BabySMS.adapters.select { |a| a.respond_to?(:feedback) }
+
+      adapters_li = adapters.map do |a|
+        "<li>/#{h a.adapter_id} <b>(#{h a.class.name} for #{h a.from})</b></li>"
+      end.join("")
+
+      sprintf(INDEX_HTML, adapters_li.empty? ? "<li><em>(none)</em></li>" : adapters_li)
+    end
+
+    BabySMS.adapters.each do |adapter|
+      if adapter.respond_to?(:feedback)
+        get "/#{adapter.adapter_id}" do |request, response|
+          adapter.feedback(request, response)
+        end
       end
-      sprintf(INDEX_HTML, adapters_li.join(''))
     end
   end
 end

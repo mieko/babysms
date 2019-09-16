@@ -14,7 +14,7 @@ Lint/AssignmentInCondition:
   Description: Don't use assignment in conditions.
   StyleGuide: https://github.com/rubocop-hq/ruby-style-guide#safe-assignment-in-condition
   Enabled: true
-  AllowSafeAssignment: false
+  AllowSafeAssignment: true
 Lint/BigDecimalNew:
   Description: "`BigDecimal.new()` is deprecated. Use `BigDecimal()` instead."
   Enabled: false
