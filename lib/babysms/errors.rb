@@ -2,26 +2,6 @@ module BabySMS
   class Error < StandardError
   end
 
-  # This isn't an exception in its truest sense: it's never thrown, but returned.
-  # However, it holds exceptions encountered along the way that were overcome.
-  #
-  # The adapter that actually delivered the message is stored in #adapter
-  class SuccessfulDelivery
-    attr_reader :message
-    attr_reader :adapter
-    attr_reader :exceptions
-
-    def initialize(message, adapter:, exceptions:)
-      @message = message
-      @adapter = adapter
-      @exceptions = exceptions
-    end
-
-    def exceptions?
-      ! exceptions.empty?
-    end
-  end
-
   # A FailedDelivery being raised means your message didn't get sent.  This can be because of a
   # single error, or multiple failed attempts via multiple adapters.
   #

@@ -5,6 +5,7 @@ require 'phony'
 
 require 'babysms/version'
 require 'babysms/adapter'
+require 'babysms/receipt'
 require 'babysms/errors'
 require 'babysms/mail_man'
 require 'babysms/message'

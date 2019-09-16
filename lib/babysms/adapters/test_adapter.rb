@@ -8,11 +8,14 @@ module BabySMS
       attr_accessor :fails
       attr_accessor :outbox
 
-      def initialize(verbose: false, fails: false, from: '+15558675309')
+      def initialize(verbose: false, fails: false, from: '+1555-555-5555')
         super(from: from)
+
         self.verbose = verbose
         self.fails = fails
         self.outbox = []
+
+        reset_delivery_id
       end
 
       def deliver(message)
@@ -26,9 +29,21 @@ module BabySMS
             #{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}:
               >> #{message.contents.white}
           MSG
-
           $stderr.puts terminal_output
         end
+
+        next_delivery_id
+      end
+
+      def reset_delivery_id
+        @next_delivery_id = 0
+      end
+
+      private
+
+      def next_delivery_id
+        @next_delivery_id += 1
+        @next_delivery_id.to_s
       end
     end
   end

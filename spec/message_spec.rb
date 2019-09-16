@@ -45,7 +45,7 @@ RSpec.describe BabySMS::Message do
 
   it 'collects earlier adapter errors on successful delivery' do
     result = message.deliver(adapters: [bad_adapter, good_adapter])
-    expect(result).to be_instance_of(BabySMS::SuccessfulDelivery)
+    expect(result).to be_instance_of(BabySMS::Receipt)
 
     # We should have one exception logged, and it should be bad_adapter
     expect(result.exceptions.size).to eq(1)
@@ -55,7 +55,7 @@ RSpec.describe BabySMS::Message do
 
   it 'records the successful adapter on success' do
     result = message.deliver(adapters: [good_adapter])
-    expect(result).to be_instance_of(BabySMS::SuccessfulDelivery)
+    expect(result).to be_instance_of(BabySMS::Receipt)
 
     expect(result.exceptions).to be_empty
     expect(result.adapter).to be(good_adapter)

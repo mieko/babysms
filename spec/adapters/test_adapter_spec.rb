@@ -13,8 +13,30 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
   around(:each) do |block|
     saved = BabySMS.adapter
     BabySMS.adapter = subject
-    block.call
-    BabySMS.adapter = saved
+    begin
+      block.call
+    ensure
+      BabySMS.adapter = saved
+    end
+  end
+
+  it 'has an adapter_name of "test"' do
+    expect(BabySMS::Adapters::TestAdapter.adapter_name).to eq("test")
+  end
+
+  it 'generates sequential ids' do
+    result = subject.deliver(message)
+    expect(result).to eq '1'
+
+    result = subject.deliver(message)
+    expect(result).to eq '2'
+  end
+
+  it 'has an id generated from its "from" number' do
+    expect(subject.adapter_id).to eq('15555555555@test')
+
+    another_adapter = BabySMS::Adapters::TestAdapter.new(from: '+15558675309')
+    expect(another_adapter.adapter_id).to eq('15558675309@test')
   end
 
   it 'is not verbose by default' do

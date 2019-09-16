@@ -30,8 +30,7 @@ module BabySMS
       send(:"next_#{strategy}_adapter")
     end
 
-    # returns each adapter in the order specified by
-    # the strategy.  mutates the adapters Array.
+    # returns each adapter in the order specified by the strategy.  Mutates adapters Array.
     def each_adapter(&block)
       loop do
         raise StopIteration if adapters.empty?
@@ -45,24 +44,17 @@ module BabySMS
       end
 
       # We collect and return all errors leading up to the (hopefully) successful delivery
-      delivered_with = nil
       failures = []
-
       each_adapter do |adapter|
-        adapter.deliver(self)
-        delivered_with = adapter
-        break
+        return BabySMS::Receipt.new(delivery_id: adapter.deliver(self),
+                                    message: message,
+                                    adapter: adapter,
+                                    exceptions: failures)
       rescue BabySMS::FailedDelivery => e
         failures.push(e)
       end
 
-      if delivered_with
-        return BabySMS::SuccessfulDelivery.new(message,
-                                               adapter: delivered_with,
-                                               exceptions: failures)
-      else
-        raise BabySMS::FailedDelivery.multiple(failures)
-      end
+      raise BabySMS::FailedDelivery.multiple(failures)
     end
   end
 end

@@ -34,8 +34,8 @@ adapters list in `BabySMS.adapter[s]`.
 BabySMS will attempt delivery with each adapter in-order until one succeeds, or will raise
 `BabySMS::FailedDelivery` once exhausted.
 
-`#deliver` returns a `BabySMS::SuccessfulDelivery`.  This allows you to inspect (and log)
-adapters that failed along the way to delivery.  Use `#exceptions?` to discover if something is
+`#deliver` returns a `BabySMS::Receipt`.  This allows you to inspect (and log) adapters that failed
+along the way to delivery.  Use `#exceptions?` to discover if something is
 failing, and `#exceptions` to see the list of failed deliveries before the successful one.
 
 
