@@ -15,6 +15,8 @@ module BabySMS
 
     def initialize(adapters:, strategy:)
       @adapters = adapters.dup
+
+      fail ArgumentError, "invalid strategy" unless [:in_order, :random].include?(strategy)
       @strategy = strategy
     end
 

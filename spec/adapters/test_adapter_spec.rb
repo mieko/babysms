@@ -45,16 +45,12 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
 
   it 'prints outgoing SMS messages to the terminal if verbose is true' do
     subject.verbose = true
-    expect do
-      subject.deliver(message)
-    end.to output.to_stderr
+    expect { subject.deliver(message) }.to output.to_stderr
   end
 
   it 'does not print outgoing SMS messages to the terminal if verbose is false' do
     subject.verbose = false
-    expect do
-      subject.deliver(message)
-    end.not_to output.to_stderr
+    expect { subject.deliver(message) }.not_to output.to_stderr
   end
 
   it 'saves outgoing messages in the outbox' do
