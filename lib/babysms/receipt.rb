@@ -3,21 +3,21 @@ module BabySMS
     attr_reader :message
     attr_reader :adapter
     attr_reader :exceptions
-    attr_reader :delivery_id
+    attr_reader :message_uuid
 
-    def initialize(message:, adapter:, exceptions:, delivery_id:)
+    def initialize(message:, adapter:, exceptions:, message_uuid:)
       @message = message
       @adapter = adapter
       @exceptions = exceptions
-      @delivery_id = delivery_id
+      @message_uuid = message_uuid
     end
 
     def token
-      "#{adapter.id}:#{delivery_id}"
+      "#{adapter.id}:#{message_uuid}"
     end
 
     def exceptions?
-      ! exceptions.empty?
+      !exceptions.empty?
     end
   end
 end

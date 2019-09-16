@@ -13,7 +13,7 @@ module BabySMS
 
       def deliver(message)
         response = client.messages.create(from, [message.recipient], message.contents)
-        return response.message_uuid
+        response.message_uuid
       rescue PlivoRESTError => e
         raise BabySMS::FailedDelivery.new(e.message, adapter: self)
       end

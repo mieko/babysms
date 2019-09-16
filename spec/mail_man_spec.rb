@@ -27,7 +27,7 @@ RSpec.describe(BabySMS::MailMan) do
     expect(result.adapter).to be(adapter_chain.last)
   end
 
-  it 'attempts deliveries to adapters in-order with :in_order strategy' do
+  it 'attempts deliveries to adapters in random order with :random strategy' do
     adapter_chain = [
       BabySMS::Adapters::TestAdapter.new(from: '+15550001111', fails: true),
       BabySMS::Adapters::TestAdapter.new(from: '+15552223333', fails: true),

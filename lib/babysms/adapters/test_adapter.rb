@@ -15,7 +15,7 @@ module BabySMS
         self.fails = fails
         self.outbox = []
 
-        reset_delivery_id
+        reset_message_uuid
       end
 
       def deliver(message)
@@ -32,18 +32,18 @@ module BabySMS
           $stderr.puts terminal_output
         end
 
-        next_delivery_id
+        next_message_uuid
       end
 
-      def reset_delivery_id
-        @next_delivery_id = 0
+      def reset_message_uuid
+        @message_uuid = 0
       end
 
       private
 
-      def next_delivery_id
-        @next_delivery_id += 1
-        @next_delivery_id.to_s
+      def next_message_uuid
+        @message_uuid += 1
+        @message_uuid.to_s
       end
     end
   end

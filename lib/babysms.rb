@@ -26,7 +26,7 @@ module BabySMS
   end
 
   def self.adapter
-    fail "use #adapters= with multiple adapters" unless adapters.size == 1
+    fail "can't use #adapters= with multiple adapters" unless adapters.size == 1
     adapters.first
   end
 
@@ -43,7 +43,10 @@ module BabySMS
       end.compact
     end
 
-    test ? @found_adapters
-         : @found_adapters - [ BabySMS::Adapters::TestAdapter ]
+    if test
+      @found_adapters
+    else
+      @found_adapters - [BabySMS::Adapters::TestAdapter]
+    end
   end
 end

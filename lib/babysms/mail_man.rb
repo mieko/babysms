@@ -14,9 +14,11 @@ module BabySMS
     attr_reader :strategy
 
     def initialize(adapters:, strategy:)
-      @adapters = adapters.dup
+      unless respond_to?(:"next_#{strategy}_adapter")
+        fail ArgumentError, "invalid strategy: #{strategy}"
+      end
 
-      fail ArgumentError, "invalid strategy" unless [:in_order, :random].include?(strategy)
+      @adapters = adapters.dup
       @strategy = strategy
     end
 
@@ -42,13 +44,13 @@ module BabySMS
 
     def deliver(message)
       if @adapters.empty?
-        raise BabySMS::Error, 'No adapter configured'
+        raise BabySMS::Error, 'no adapter configured'
       end
 
       # We collect and return all errors leading up to the (hopefully) successful delivery
       failures = []
       each_adapter do |adapter|
-        return BabySMS::Receipt.new(delivery_id: adapter.deliver(self),
+        return BabySMS::Receipt.new(message_uuid: adapter.deliver(self),
                                     message: message,
                                     adapter: adapter,
                                     exceptions: failures)

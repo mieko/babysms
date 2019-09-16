@@ -21,7 +21,7 @@ module BabySMS
                                             adapter: self)
         end
 
-        return response.messages.first.message_id
+        response.messages.first.message_id
       end
     end
   end

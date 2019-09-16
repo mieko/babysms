@@ -13,7 +13,7 @@ module BabySMS
     end
 
     def self.adapter_name
-      bare_name = self.name.split('::').last
+      bare_name = name.split('::').last
       bare_name.gsub(/Adapter\z/, '').downcase
     end
 
@@ -22,8 +22,7 @@ module BabySMS
     end
 
     protected
-    def client=(value)
-      @client = value
-    end
+
+    attr_writer :client
   end
 end

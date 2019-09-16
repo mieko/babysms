@@ -1,0 +1,75 @@
+inherit_from:
+  - .rubocop-airbnb.yml
+
+AllCops:
+  TargetRubyVersion: 2.6.3
+
+Rails:
+  Enabled: true
+
+Layout/EmptyLines:
+  Enabled: false
+
+# Restore Rubocop default
+Layout/DotPosition:
+  EnforcedStyle: leading
+
+# The inbuilt style does not accommodate for:
+#
+# var = begin
+#   something
+# rescue
+#   something
+# end
+#
+# without indenting the entire block and looking dumb.
+
+Layout/RescueEnsureAlignment:
+  Enabled: false
+
+# In every instance where I've removed these extra lines, the result was less readable.
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# Restore Rubocop default
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+# Allow both %x() and backticks
+Style/CommandLiteral:
+  Enabled: false
+
+# $? and $: are more idiomatic than importing English and using $MAGIC_GLOBALS.
+# If it's more esoteric, comment.
+Style/SpecialGlobalVars:
+  Enabled: false
+
+# Direct opposite of Prettier, allow either.
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+# Direct opposite of Prettier, allow either
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# Allow top-level mixins.  Rightfully used in stubs/tasks
+Style/MixinUsage:
+  Enabled: false
+
+# Generated code/stubs as well as the rest of the code use what's
+# appropriate according to the context
+Style/PercentLiteralDelimiters:
+  Enabled: false
+
+# "warn" and $stderr.puts have different connotations
+Style/StderrPuts:
+  Enabled: false

@@ -22,7 +22,7 @@ module BabySMS
           raise BabySMS::FailedDelivery.new(response[:error].to_s, adapter: self)
         end
 
-        return response[:id]
+        response[:id]
       end
     end
   end
