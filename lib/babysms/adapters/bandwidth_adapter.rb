@@ -18,10 +18,11 @@ module BabySMS
                                              from: from,
                                              to: message.recipient,
                                              text: message.contents)
-
         if response[:error]
           raise BabySMS::FailedDelivery.new(response[:error].to_s, adapter: self)
         end
+
+        return response[:id]
       end
     end
   end

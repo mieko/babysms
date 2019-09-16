@@ -7,14 +7,14 @@ module BabySMS
       @from = Phony.normalize(from)
     end
 
-    def self.adapter_name
-      bare_name = self.name.split('::').last
-      bare_name.gsub(/Adapter\z/, '').downcase
-    end
-
     def self.for_number(number)
       number = Phony.normalize(number)
       BabySMS.adapters.find { |adapter| adapter.from == number }
+    end
+
+    def self.adapter_name
+      bare_name = self.name.split('::').last
+      bare_name.gsub(/Adapter\z/, '').downcase
     end
 
     def adapter_id

@@ -12,9 +12,10 @@ module BabySMS
       end
 
       def deliver(message)
-        client.api.account.messages.create(from: from,
-                                           to: message.recipient,
-                                           body: message.contents)
+        result = client.api.account.messages.create(from: from,
+                                                    to: message.recipient,
+                                                    body: message.contents)
+        return result.sid
       rescue Twilio::REST::TwilioError => e
         raise BabySMS::FailedDelivery.new(e.message, adapter: self)
       end
