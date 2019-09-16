@@ -17,8 +17,12 @@ module BabySMS
       bare_name.gsub(/Adapter\z/, '').downcase
     end
 
+    def adapter_name
+      self.class.adapter_name
+    end
+
     def adapter_id
-      "#{from}@#{self.class.adapter_name}"
+      "#{from}@#{adapter_name}"
     end
 
     protected
