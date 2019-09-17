@@ -1,6 +1,4 @@
 require 'babysms'
-
-require 'json'
 require 'sinatra/base'
 
 # WebApplication is a Sinatra app that handles all incoming web hook

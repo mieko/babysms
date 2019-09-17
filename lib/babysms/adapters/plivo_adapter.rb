@@ -20,7 +20,13 @@ module BabySMS
 
       class WebHook < BabySMS::WebHook
         def process(app:, report:)
-          fail BabySMS::WebHookError
+          # 'Uuid' is the uuid.  Also of note: NumMedia, and MediaContentType0, MediaUrl0
+          message = BabySMS::Message.new(from: app.params['From'],
+                                         to: app.params['To'],
+                                         contents: app.params['Text'],
+                                         uuid: app.params['Uuid'])
+          report.incoming_message(message)
+          [200, { 'Content-Type' => 'text/plain' }, 'ok']
         end
       end
     end

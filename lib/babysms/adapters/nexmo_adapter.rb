@@ -26,7 +26,12 @@ module BabySMS
 
       class WebHook < BabySMS::WebHook
         def process(app:, report:)
-          fail BabySMS::WebHookError
+          message = BabySMS::Message.new(from: app.params['msisdn'],
+                                         to: app.params['to'],
+                                         contents: app.params['text'],
+                                         uuid: app.params['messageId'])
+          report.incoming_message(message)
+          [200, { 'Content-Type' => 'text/plain' }, 'ok']
         end
       end
     end

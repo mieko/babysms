@@ -81,11 +81,11 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
     end
 
     it "can receive a message" do
-      json_data = load_example("incoming_message")
-      post(web_hook.mount_point, json_data, { 'CONTENT_TYPE' => 'application/json' })
+      request_data = load_example("incoming_message")
+      post(web_hook.mount_point, request_data, { 'CONTENT_TYPE' => 'application/json' })
 
       expect(last_response).to be_ok
-      expect(JSON.parse(last_response.body)).to eq({ 'status' => 'ok' })
+      expect(last_response.body).to eq('ok')
     end
   end
 end

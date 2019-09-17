@@ -7,7 +7,7 @@ module BabySMS
     attr_accessor :from
     attr_accessor :contents
 
-    def initialize(to:, from: nil, contents:)
+    def initialize(to:, from: nil, contents:, uuid: nil)
       @to = Phony.normalize(to)
       @from = from
       @contents = contents

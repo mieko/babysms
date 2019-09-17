@@ -26,8 +26,18 @@ module BabySMS
       end
 
       class WebHook < BabySMS::WebHook
+        def validate!(request)
+          unless request.params['']
+        end
+
         def process(app:, report:)
-          fail BabySMS::WebHookError
+          validate!(app.request)
+          message = BabySMS::Message.new(from: app.params['from'],
+                                         to: app.params['to'],
+                                         contents: app.params['text'],
+                                         uuid: app.params['id'])
+          report.incoming_message(message)
+          [200, { 'Content-Type' => 'text/plain' }, 'ok']
         end
       end
     end

@@ -33,10 +33,11 @@ module BabySMS
         def process(app:, report:)
           validate!(app.request)
 
-          # 'MessageSid' is the uuid.  Also of note: NumMedia, and MediaContentType0, MediaUrl0
+          # Of note: NumMedia, and MediaContentType0, MediaUrl0
           message = BabySMS::Message.new(from: app.params['From'],
                                          to: app.params['To'],
-                                         contents: app.params['Body'])
+                                         contents: app.params['Body'],
+                                         uuid: app.params['MessageSid'])
           report.incoming_message(message)
           [200, { 'Content-Type' => 'application/xml' }, '<Response></Response>']
         end
