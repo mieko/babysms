@@ -37,11 +37,13 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 5.2.1"
   spec.add_dependency "rainbow", ">= 3.0"
   spec.add_dependency "phony", ">= 0.14"
+  spec.add_dependency "sinatra", "~> 2.0"
 
   spec.add_development_dependency "bundler", ">= 1.17"
   spec.add_development_dependency "rake", ">= 10.0"
   spec.add_development_dependency "rspec", ">= 3.0"
 
+  spec.add_development_dependency "rack-test", "~> 1.1.0"
   spec.add_development_dependency "twilio-ruby", ">= 5.18.0"
   spec.add_development_dependency "nexmo", ">= 5.5.0"
   spec.add_development_dependency "ruby-bandwidth", ">= 1.0.20"

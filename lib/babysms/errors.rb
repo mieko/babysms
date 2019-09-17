@@ -29,4 +29,7 @@ module BabySMS
       exceptions.size > 1
     end
   end
+
+  class MalformedWebHookData < BabySMS::Error
+  end
 end

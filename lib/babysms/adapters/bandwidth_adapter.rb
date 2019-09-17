@@ -16,7 +16,7 @@ module BabySMS
       def deliver(message)
         response = Bandwidth::Message.create(client,
                                              from: from,
-                                             to: message.recipient,
+                                             to: message.to,
                                              text: message.contents)
         if response[:error]
           raise BabySMS::FailedDelivery.new(response[:error].to_s, adapter: self)

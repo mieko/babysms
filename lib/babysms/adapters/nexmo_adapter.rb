@@ -14,7 +14,7 @@ module BabySMS
       def deliver(message)
         # Thanks for being weird, Nexmo.  Rejects numbers starting with "+"
         response = client.sms.send(from: from.gsub(/\A\+/, ''),
-                                   to: message.recipient,
+                                   to: message.to,
                                    text: message.contents)
         if response.messages.first.status != '0'
           raise BabySMS::FailedDelivery.new(response.messages.first.error_text,

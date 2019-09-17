@@ -3,11 +3,13 @@ module BabySMS
   end
 
   class Message
-    attr_accessor :recipient
+    attr_accessor :to
+    attr_accessor :from
     attr_accessor :contents
 
-    def initialize(recipient:, contents:)
-      @recipient = Phony.normalize(recipient)
+    def initialize(to:, from: nil, contents:)
+      @to = Phony.normalize(to)
+      @from = from
       @contents = contents
     end
 
@@ -16,22 +18,27 @@ module BabySMS
       BabySMS::MailMan.new(adapters: adapters, strategy: strategy).deliver(self)
     end
 
+    def reply(contents:, adapters: BabySMS.adapters, strategy: BabySMS.strategy)
+      Message.new(to: from, from: to, contents: contents)
+             .deliver(adapters: adapters, strategy: strategy)
+    end
+
     private
 
     MAX_CONTENTS_LENGTH = 1600
 
     def validate!
-      validate_recipient!
+      validate_to!
       validate_contents!
     end
 
-    def validate_recipient!
-      if recipient.blank?
-        fail BabySMS::InvalidMessage, 'no recipient'
+    def validate_to!
+      if to.blank?
+        fail BabySMS::InvalidMessage, 'no to:'
       end
 
-      unless Phony.plausible?(recipient)
-        fail BabySMS::InvalidMessage, "implausible recipient: #{recipient}"
+      unless Phony.plausible?(to)
+        fail BabySMS::InvalidMessage, "implausible to: #{to}"
       end
     end
 

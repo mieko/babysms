@@ -1,6 +1,6 @@
 RSpec.describe(BabySMS::MailMan) do
   let(:message) do
-    BabySMS::Message.new(recipient: '+1 (555) 867-5309', contents: 'Hello, world')
+    BabySMS::Message.new(to: '+1 (555) 867-5309', contents: 'Hello, world')
   end
 
   it 'attempts deliveries to adapters in-order with :in_order strategy' do
@@ -39,6 +39,21 @@ RSpec.describe(BabySMS::MailMan) do
 
     result = mail_man.deliver(message)
     expect(result).to be_a(BabySMS::Receipt)
+  end
+
+  it 'uses the appropriate adapter when a message has an explicit from' do
+    adapter_chain = [
+      BabySMS::Adapters::TestAdapter.new(from: '+15550001111', fails: false),
+      BabySMS::Adapters::TestAdapter.new(from: '+15552223333', fails: false)
+    ]
+
+    mail_man = BabySMS::MailMan.new(adapters: adapter_chain, strategy: :in_order)
+    message.from = adapter_chain.last.from
+
+    result = mail_man.deliver(message)
+    expect(result).to be_a(BabySMS::Receipt)
+    expect(result.adapter).to be(adapter_chain.last)
+    expect(result.exceptions).to be_empty
   end
 
   it 'raises FailedDelivery on failure' do

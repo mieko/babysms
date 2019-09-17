@@ -21,7 +21,7 @@ gem 'babysms', '~> 0.5', github: 'mieko/babysms'
 BabySMS.adapter = BabySMS::Adapters::SomeAdapter.new(...)
 
 # elsewhere:
-msg = BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Your Message')
+msg = BabySMS::Message.new(to: '+1 555-555-5555', contents: 'Your Message')
 msg.deliver
 ```
 

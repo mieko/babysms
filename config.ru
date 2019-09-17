@@ -1,2 +1,2 @@
-require 'babysms/feedback'
-run BabySMS::Feedback.new
+require 'babysms/web_application'
+run BabySMS::WebApplication.new

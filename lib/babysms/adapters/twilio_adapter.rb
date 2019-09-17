@@ -13,11 +13,18 @@ module BabySMS
 
       def deliver(message)
         result = client.api.account.messages.create(from: from,
-                                                    to: message.recipient,
-                                                    body: message.contents)
+                                                    to: message.to,
+                                                    body: message.contents,
+                                                    status_callback: web_hook.end_point)
         result.sid
       rescue Twilio::REST::TwilioError => e
         raise BabySMS::FailedDelivery.new(e.message, adapter: self)
+      end
+
+      class WebHook < BabySMS::WebHook
+        def process(request, response)
+          "<Response></Response>"
+        end
       end
     end
   end

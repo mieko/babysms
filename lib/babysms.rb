@@ -17,6 +17,7 @@ require 'babysms/adapters/plivo_adapter' if Object.const_defined?(:Plivo)
 require 'babysms/adapters/twilio_adapter' if Object.const_defined?(:Twilio)
 
 module BabySMS
+  mattr_accessor :web_hook_root, default: "http://example.com/web_hooks/"
   mattr_accessor :strategy, default: :in_order
   mattr_accessor :adapters, default: [BabySMS::Adapters::TestAdapter.new(verbose: true)]
 

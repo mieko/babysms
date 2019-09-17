@@ -1,5 +1,8 @@
 require 'babysms/adapters/test_adapter'
 require 'babysms/message'
+require 'babysms/report'
+require 'babysms/web_application'
+require_relative 'contexts/as_a_web_hook'
 
 RSpec.describe BabySMS::Adapters::TestAdapter do
   subject(:adapter) do
@@ -7,7 +10,7 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
   end
 
   let(:message) do
-    BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, World.')
+    BabySMS::Message.new(to: '+1 555-555-5555', contents: 'Hello, World.')
   end
 
   around(:each) do |block|
@@ -58,5 +61,31 @@ RSpec.describe BabySMS::Adapters::TestAdapter do
     subject.deliver(message)
     expect(subject.outbox.size).to eq(1)
     expect(subject.outbox.first).to eq(message)
+  end
+
+  describe BabySMS::Adapters::TestAdapter::WebHook do
+    include Rack::Test::Methods
+    include_context 'as a WebHook'
+
+    def app
+      ::BabySMS::WebApplication
+    end
+
+    let(:web_hook) do
+      subject.web_hook
+    end
+
+    it 'supports web hooks' do
+      expect(subject.web_hook?).to be_truthy
+      expect(subject.web_hook).to be_a(BabySMS::WebHook)
+    end
+
+    it "can receive a message" do
+      json_data = load_example("incoming_message")
+      post(web_hook.mount_point, json_data, { 'CONTENT_TYPE' => 'application/json' })
+
+      expect(last_response).to be_ok
+      expect(JSON.parse(last_response.body)).to eq({ 'status' => 'ok' })
+    end
   end
 end

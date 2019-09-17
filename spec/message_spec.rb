@@ -2,7 +2,7 @@ require 'babysms/message'
 
 RSpec.describe BabySMS::Message do
   subject(:message) do
-    BabySMS::Message.new(recipient: '+1 555-555-5555', contents: 'Hello, world')
+    BabySMS::Message.new(to: '+1 555-555-5555', contents: 'Hello, world')
   end
 
   let(:good_adapter) do
@@ -19,7 +19,7 @@ RSpec.describe BabySMS::Message do
   end
 
   it 'does not attempt to deliver to invalid recipients' do
-    message.recipient = '5'
+    message.to = '5'
     expect { message.deliver }.to raise_error(BabySMS::InvalidMessage)
   end
 

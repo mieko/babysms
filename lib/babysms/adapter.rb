@@ -7,9 +7,13 @@ module BabySMS
       @from = Phony.normalize(from)
     end
 
-    def self.for_number(number)
+    def self.for_number(number, pool: BabySMS.adapters)
       number = Phony.normalize(number)
-      BabySMS.adapters.find { |adapter| adapter.from == number }
+      pool.find { |adapter| adapter.from == number }
+    end
+
+    def self.for_adapter_id(adapter_id, pool: BabySMS.adapters)
+      pool.find { |adapter| adapter.adapter_id == adapter_id }
     end
 
     def self.adapter_name
@@ -23,6 +27,24 @@ module BabySMS
 
     def adapter_id
       "#{from}@#{adapter_name}"
+    end
+
+    def web_hook_class
+      self.class.const_get(:WebHook)
+    end
+
+    def web_hook?
+      !!web_hook_class
+    end
+
+    def web_hook
+      unless instance_variable_defined?(:@web_hook)
+        @web_hook = if (cls = web_hook_class)
+          cls.new(self)
+        end
+      end
+
+      @web_hook
     end
 
     protected

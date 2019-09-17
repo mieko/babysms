@@ -1,4 +1,8 @@
+require 'babysms/web_hook'
+
 require 'rainbow/refinement'
+require 'json'
+
 using Rainbow
 
 module BabySMS
@@ -14,8 +18,6 @@ module BabySMS
         self.verbose = verbose
         self.fails = fails
         self.outbox = []
-
-        reset_message_uuid
       end
 
       def deliver(message)
@@ -26,7 +28,7 @@ module BabySMS
         outbox.push(message)
         if verbose
           terminal_output = <<~"MSG"
-            #{"SMS:".bright.yellow} -> #{message.recipient.bright.yellow}:
+            #{"SMS:".bright.yellow} -> #{message.to.bright.yellow}:
               >> #{message.contents.white}
           MSG
           $stderr.puts terminal_output
@@ -35,15 +37,24 @@ module BabySMS
         next_message_uuid
       end
 
-      def reset_message_uuid
-        @message_uuid = 0
-      end
-
       private
 
       def next_message_uuid
+        @message_uuid ||= 0
         @message_uuid += 1
         @message_uuid.to_s
+      end
+
+      class WebHook < BabySMS::WebHook
+        def process(app:, report:)
+          json = JSON.parse(app.request.body.read)
+          message = BabySMS::Message.new(to: adapter.from,
+                                         from: json["from"],
+                                         contents: json["body"])
+          report.incoming_message(message)
+
+          JSON.dump({ "status" => "ok" })
+        end
       end
     end
   end
