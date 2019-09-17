@@ -28,7 +28,7 @@ module BabySMS
         outbox.push(message)
         if verbose
           terminal_output = <<~"MSG"
-            #{"SMS:".bright.yellow} -> #{message.to.bright.yellow}:
+            #{"SMS Outgoing:".bright.yellow} -> #{message.to.bright.yellow}:
               >> #{message.contents.white}
           MSG
           $stderr.puts terminal_output
@@ -52,7 +52,6 @@ module BabySMS
                                          from: json["from"],
                                          contents: json["body"])
           report.incoming_message(message)
-
           [200, { "Content-Type" => "text/plain" }, 'ok']
         end
       end

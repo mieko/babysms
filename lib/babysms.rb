@@ -4,6 +4,8 @@ require 'babysms/receipt'
 require 'babysms/errors'
 require 'babysms/mail_man'
 require 'babysms/message'
+require 'babysms/report'
+require 'babysms/inbox'
 
 require 'babysms/adapters/test_adapter'
 require 'babysms/adapters/bandwidth_adapter' if Object.const_defined?(:Bandwidth)
@@ -14,10 +16,12 @@ require 'babysms/adapters/signalwire_adapter' if Object.const_defined?(:Signalwi
 
 require 'active_support/core_ext/module/attribute_accessors'
 require 'phony'
+require 'rainbow/refinement'
 
 module BabySMS
   mattr_accessor :web_hook_root, default: "http://example.com/web_hooks/"
   mattr_accessor :strategy, default: :in_order
+
   mattr_accessor :adapters, default: [BabySMS::Adapters::TestAdapter.new(verbose: true)]
 
   # Shorthand to set a list of one adapter in the simple case
@@ -48,5 +52,10 @@ module BabySMS
     else
       @found_adapters - [BabySMS::Adapters::TestAdapter]
     end
+  end
+
+  mattr_accessor :inboxes, default: []
+  def self.inbox=(inbox)
+    self.inboxes = [inbox]
   end
 end

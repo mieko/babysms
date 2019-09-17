@@ -5,6 +5,10 @@ require 'sinatra/base'
 # HTTP requests.  It multiplexes to all adapters that are enabled.
 module BabySMS
   class WebApplication < Sinatra::Base
+    configure do
+      set :show_exceptions, false
+    end
+
     helpers do
       def h(text)
         Rack::Utils.escape_html(text)
@@ -19,7 +23,8 @@ module BabySMS
       adapter = BabySMS::Adapter.for_adapter_id(params['adapter_id'])
       if adapter&.web_hook?
         report = BabySMS::Report.new(adapter)
-        begin
+
+        result = begin
           adapter.web_hook.process(app: self, report: report)
         rescue BabySMS::Malformed => e
           error_response(500, "malformed: #{e.message}")
@@ -28,6 +33,10 @@ module BabySMS
         rescue BabySMS::WebHookError => e
           error_response(500, "web hook error: #{e.message}")
         end
+
+        report.dispatch_all
+
+        result
       else
         error_response(404, "not found")
       end

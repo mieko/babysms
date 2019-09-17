@@ -37,7 +37,7 @@ BabySMS.adapters = [
   BabySMS::Adapters::PiedPiperAdapter.new(...)
 ]
 
-BabySMS.strategy = :in_order
+# BabySMS.strategy = :in_order # this is the default
 BabySMS::Message.new(...).deliver
 ```
 
@@ -46,7 +46,7 @@ to `:random` will go through the list randomly, providing something akin to load
 
 ## Sending Messages
 
-`BabySMS::Message#deliver` can directly accept an `adapters` keyword argument that overrides the
+`BabySMS::Message#deliver` can directly accept an `adapters:` keyword argument that overrides the
 global adapters list in `BabySMS.adapter[s]`.
 
 BabySMS will attempt delivery with each adapter until one succeeds, or will raise
@@ -60,7 +60,7 @@ along the way to delivery.  Use `#exceptions?` to discover if something is faili
 
 *Note: This functionality is currently being implemented.*
 
-The API providers report incoming messages to you by accessing a publicly-available URL.  This means
+API providers report incoming messages to you by accessing a publicly-available URL.  This means
 you have to have a web server running on the open internet to receive and process incoming messages
 
 `BabySMS::WebApplication` is a Rack (Sinatra) application that does just that.
@@ -77,7 +77,7 @@ BabySMS.adapter = BabySMS::TestAdapter.new
 BabySMS.web_hook_root = "https://example.com/_babysms"
 
 BabySMS.inbox = BabySMS::Inbox.new do
-  receive do |message|
+  receive do |message:|
     puts "Incoming message from #{message.from}:\n"
     puts "  > #{message.contents}"
 
