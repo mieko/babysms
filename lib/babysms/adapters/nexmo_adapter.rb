@@ -23,6 +23,12 @@ module BabySMS
 
         response.messages.first.message_id
       end
+
+      class WebHook < BabySMS::WebHook
+        def process(app:, report:)
+          fail BabySMS::WebHookError
+        end
+      end
     end
   end
 end

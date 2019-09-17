@@ -22,8 +22,23 @@ module BabySMS
       end
 
       class WebHook < BabySMS::WebHook
-        def process(request, response)
-          "<Response></Response>"
+        def validate!(request)
+          validator = Twilio::Security::RequestValidator.new(adapter.client.auth_token)
+          unless validator.validate(end_point, request.params,
+                                    request.headers['X-Twilio-Signature'])
+            fail BabySMS::Unauthorized, 'twilio signature failed'
+          end
+        end
+
+        def process(app:, report:)
+          validate!(app.request)
+
+          # 'MessageSid' is the uuid.  Also of note: NumMedia, and MediaContentType0, MediaUrl0
+          message = BabySMS::Message.new(from: app.params['From'],
+                                         to: app.params['To'],
+                                         contents: app.params['Body'])
+          report.incoming_message(message)
+          [200, { 'Content-Type' => 'application/xml' }, '<Response></Response>']
         end
       end
     end

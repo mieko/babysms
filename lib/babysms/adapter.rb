@@ -7,6 +7,7 @@ module BabySMS
       @from = Phony.normalize(from)
     end
 
+    # Locates an adapter instance associated with a phone number
     def self.for_number(number, pool: BabySMS.adapters)
       number = Phony.normalize(number)
       pool.find { |adapter| adapter.from == number }
@@ -21,14 +22,18 @@ module BabySMS
       bare_name.gsub(/Adapter\z/, '').downcase
     end
 
+    # e.g., "twilio"
     def adapter_name
       self.class.adapter_name
     end
 
+    # e.g., "15555555555@twilio"
     def adapter_id
       "#{from}@#{adapter_name}"
     end
 
+    # if the adapter supports web hooks, it'll have a nested class
+    # called "WebHook".  This returns the class
     def web_hook_class
       self.class.const_get(:WebHook)
     end
@@ -37,6 +42,7 @@ module BabySMS
       !!web_hook_class
     end
 
+    # Returns an instance of the web hook handler, if it exists
     def web_hook
       unless instance_variable_defined?(:@web_hook)
         @web_hook = if (cls = web_hook_class)

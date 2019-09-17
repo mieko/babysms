@@ -17,6 +17,12 @@ module BabySMS
       rescue PlivoRESTError => e
         raise BabySMS::FailedDelivery.new(e.message, adapter: self)
       end
+
+      class WebHook < BabySMS::WebHook
+        def process(app:, report:)
+          fail BabySMS::WebHookError
+        end
+      end
     end
   end
 end

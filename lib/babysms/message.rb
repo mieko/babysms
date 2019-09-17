@@ -18,6 +18,7 @@ module BabySMS
       BabySMS::MailMan.new(adapters: adapters, strategy: strategy).deliver(self)
     end
 
+    # generates and delivers a reply to a message
     def reply(contents:, adapters: BabySMS.adapters, strategy: BabySMS.strategy)
       Message.new(to: from, from: to, contents: contents)
              .deliver(adapters: adapters, strategy: strategy)
@@ -33,7 +34,7 @@ module BabySMS
     end
 
     def validate_to!
-      if to.blank?
+      if to.nil? || to.empty?
         fail BabySMS::InvalidMessage, 'no to:'
       end
 
@@ -43,7 +44,7 @@ module BabySMS
     end
 
     def validate_contents!
-      if contents.blank?
+      if contents.nil? || contents.empty?
         fail BabySMS::InvalidMessage, 'no contents'
       end
 

@@ -53,7 +53,7 @@ module BabySMS
                                          contents: json["body"])
           report.incoming_message(message)
 
-          JSON.dump({ "status" => "ok" })
+          [200, { "Content-Type" => "application/json" }, JSON.dump(status: "ok")]
         end
       end
     end

@@ -1,8 +1,3 @@
-require 'active_support'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/module/attribute_accessors'
-require 'phony'
-
 require 'babysms/version'
 require 'babysms/adapter'
 require 'babysms/receipt'
@@ -15,6 +10,9 @@ require 'babysms/adapters/bandwidth_adapter' if Object.const_defined?(:Bandwidth
 require 'babysms/adapters/nexmo_adapter' if Object.const_defined?(:Nexmo)
 require 'babysms/adapters/plivo_adapter' if Object.const_defined?(:Plivo)
 require 'babysms/adapters/twilio_adapter' if Object.const_defined?(:Twilio)
+
+require 'active_support/core_ext/module/attribute_accessors'
+require 'phony'
 
 module BabySMS
   mattr_accessor :web_hook_root, default: "http://example.com/web_hooks/"

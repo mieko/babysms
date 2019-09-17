@@ -12,10 +12,6 @@ module BabySMS
       @message_uuid = message_uuid
     end
 
-    def token
-      "#{adapter.id}:#{message_uuid}"
-    end
-
     def exceptions?
       !exceptions.empty?
     end

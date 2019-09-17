@@ -24,6 +24,12 @@ module BabySMS
 
         response[:id]
       end
+
+      class WebHook < BabySMS::WebHook
+        def process(app:, report:)
+          fail BabySMS::WebHookError
+        end
+      end
     end
   end
 end

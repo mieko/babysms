@@ -30,6 +30,14 @@ module BabySMS
     end
   end
 
-  class MalformedWebHookData < BabySMS::Error
+  class WebHookError < BabySMS::Error
+  end
+
+  # Post from provider we don't understand
+  class Malformed < BabySMS::WebHookError
+  end
+
+  # Provider signature verification fails
+  class Unauthorized < BabySMS::WebHookError
   end
 end
