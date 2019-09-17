@@ -26,10 +26,6 @@ module BabySMS
       end
 
       class WebHook < BabySMS::WebHook
-        def validate!(request)
-          unless request.params['']
-        end
-
         def process(app:, report:)
           validate!(app.request)
           message = BabySMS::Message.new(from: app.params['from'],

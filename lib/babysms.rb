@@ -10,6 +10,7 @@ require 'babysms/adapters/bandwidth_adapter' if Object.const_defined?(:Bandwidth
 require 'babysms/adapters/nexmo_adapter' if Object.const_defined?(:Nexmo)
 require 'babysms/adapters/plivo_adapter' if Object.const_defined?(:Plivo)
 require 'babysms/adapters/twilio_adapter' if Object.const_defined?(:Twilio)
+require 'babysms/adapters/signalwire_adapter' if Object.const_defined?(:Signalwire)
 
 require 'active_support/core_ext/module/attribute_accessors'
 require 'phony'
