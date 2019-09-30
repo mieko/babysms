@@ -46,7 +46,7 @@ module BabySMS
       index_html = <<~'HTML'.freeze
         <!DOCTYPE html>
           <head>
-            <title>BabySMS %<version>s Endpoint</title>
+            <title>BabySMS %{version} Endpoint</title>
             <style>
               html { margin: 4em; font-family: monospace; }
               body { max-width: 45em; }
